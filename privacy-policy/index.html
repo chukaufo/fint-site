@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy — pLedger</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #0D1B3E;
+      --teal: #00C9B1;
+      --teal-dim: rgba(0, 201, 177, 0.12);
+      --teal-dim2: rgba(0, 201, 177, 0.06);
+      --text-primary: #F0F4FF;
+      --text-secondary: rgba(240, 244, 255, 0.6);
+      --text-muted: rgba(240, 244, 255, 0.35);
+      --border: rgba(0, 201, 177, 0.15);
+      --border-subtle: rgba(240, 244, 255, 0.08);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--navy);
+      color: var(--text-primary);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .orb-1 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(0,201,177,0.06) 0%, transparent 70%);
+      top: -150px; right: -150px;
+    }
+
+    /* HEADER */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 2rem;
+      background: rgba(13, 27, 62, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 0.5px solid var(--border-subtle);
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+    }
+
+    .header-logo img {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+    }
+
+    .header-logo-text {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+
+    .header-logo-text span { color: var(--teal); }
+
+    header nav a {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    header nav a:hover { color: var(--teal); }
+
+    /* CONTENT */
+    .content {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 5rem 2rem 6rem;
+    }
+
+    .page-label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 1rem;
+    }
+
+    .page-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2rem, 5vw, 3rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .page-date {
+      font-size: 0.875rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      margin-bottom: 3.5rem;
+    }
+
+    /* SECTIONS */
+    .policy-section {
+      margin-bottom: 2.5rem;
+      padding-bottom: 2.5rem;
+      border-bottom: 0.5px solid var(--border-subtle);
+    }
+
+    .policy-section:last-of-type {
+      border-bottom: none;
+    }
+
+    .policy-section h2 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+      margin-bottom: 0.75rem;
+    }
+
+    .policy-section p {
+      font-size: 0.95rem;
+      font-weight: 300;
+      color: var(--text-secondary);
+      line-height: 1.85;
+    }
+
+    .policy-section a {
+      color: var(--teal);
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .policy-section a:hover { opacity: 0.8; }
+
+    /* FOOTER */
+    footer {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 2rem;
+      border-top: 0.5px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-left {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .footer-right a {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-right a:hover { color: var(--teal); }
+
+    @media (max-width: 600px) {
+      header { padding: 1rem 1.25rem; }
+      .content { padding: 3rem 1.25rem 4rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="orb orb-1"></div>
+
+  <header>
+    <a href="../" class="header-logo">
+      <img src="../images/pledgerlogo.png" alt="pLedger logo" />
+      <span class="header-logo-text"><span>p</span>Ledger</span>
+    </a>
+    <nav>
+      <a href="../">Home</a>
+    </nav>
+  </header>
+
+  <div class="content">
+    <p class="page-label">Legal</p>
+    <h1 class="page-title">Privacy Policy</h1>
+    <p class="page-date">Last updated: May 29, 2026</p>
+
+    <div class="policy-section">
+      <h2>Overview</h2>
+      <p>pLedger is designed from the ground up to protect your privacy. We do not collect, store, transmit, or sell your personal data. This policy explains how pLedger handles your information.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>Data Storage</h2>
+      <p>All data you enter into pLedger, including receipts, budgets, categories, and recurring bills, is stored exclusively on your device using Apple's Core Data framework. No data is sent to external servers, third-party services, or any infrastructure operated by the developer.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>iCloud Sync</h2>
+      <p>If you choose to enable iCloud sync, your data is transmitted directly to your personal iCloud account through Apple's encrypted CloudKit service. The developer of pLedger has no access to your iCloud data. iCloud sync is entirely optional and disabled by default.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>Receipt Images</h2>
+      <p>Photos you capture or import are stored locally on your device as part of your receipt records. They are never uploaded to any server or shared with any third party.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>Analytics and Tracking</h2>
+      <p>pLedger contains no analytics, no crash reporting services, no advertising SDKs, and no tracking of any kind. Your usage of the app is entirely private.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>Open Source</h2>
+      <p>pLedger is open source. The complete source code is publicly available at <a href="https://github.com/chukaufo/pLedger" target="_blank" rel="noopener">github.com/chukaufo/pLedger</a>. Anyone can read, audit, and verify that the app behaves exactly as described in this policy.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>On-Device Processing</h2>
+      <p>All receipt scanning, text recognition, store name learning, and category detection happen entirely on your device using Apple's Vision framework. No image or text is sent to external services for processing.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>Children's Privacy</h2>
+      <p>pLedger does not knowingly collect data from anyone, including children under the age of 13.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>Changes to This Policy</h2>
+      <p>If this policy changes, the updated version will be posted at this URL with a revised date. Continued use of the app after changes constitutes acceptance of the updated policy.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>Contact</h2>
+      <p>If you have questions about this privacy policy, you can reach us at <a href="mailto:chukaufo@gmail.com">chukaufo@gmail.com</a>.</p>
+    </div>
+  </div>
+
+  <footer>
+    <span class="footer-left">© 2026 pLedger. Built by Chuka Uwefoh.</span>
+    <div class="footer-right">
+      <a href="../">Home</a>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pLedger — Your Private Ledger</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #0D1B3E;
+      --navy-mid: #122050;
+      --navy-light: #1a2d6b;
+      --teal: #00C9B1;
+      --teal-dark: #00897B;
+      --teal-dim: rgba(0, 201, 177, 0.12);
+      --teal-dim2: rgba(0, 201, 177, 0.06);
+      --text-primary: #F0F4FF;
+      --text-secondary: rgba(240, 244, 255, 0.6);
+      --text-muted: rgba(240, 244, 255, 0.35);
+      --border: rgba(0, 201, 177, 0.15);
+      --border-subtle: rgba(240, 244, 255, 0.08);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--navy);
+      color: var(--text-primary);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .orb-1 {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(0,201,177,0.08) 0%, transparent 70%);
+      top: -200px; right: -200px;
+    }
+    .orb-2 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(0,137,123,0.06) 0%, transparent 70%);
+      bottom: 200px; left: -100px;
+    }
+
+    /* HEADER */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 2rem;
+      background: rgba(13, 27, 62, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 0.5px solid var(--border-subtle);
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+    }
+
+    .header-logo img {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+    }
+
+    .header-logo-text {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+
+    .header-logo-text span { color: var(--teal); }
+
+    header nav a {
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    header nav a:hover { color: var(--teal); }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 7rem 2rem 5rem;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--teal-dim);
+      border: 0.5px solid var(--border);
+      border-radius: 100px;
+      padding: 0.35rem 1rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--teal);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 2.5rem;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .hero-badge-dot {
+      width: 6px; height: 6px;
+      background: var(--teal);
+      border-radius: 50%;
+      animation: pulse 2s ease infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.4rem, 6vw, 3.75rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+
+    h1 .teal { color: var(--teal); }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      font-weight: 300;
+      color: var(--text-secondary);
+      max-width: 520px;
+      margin: 0 auto 3rem;
+      line-height: 1.8;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+
+    .hero-cta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      animation: fadeUp 0.6s 0.3s ease both;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--teal);
+      color: var(--navy);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.75rem 1.75rem;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: transparent;
+      color: var(--text-secondary);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 0.95rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 100px;
+      border: 0.5px solid var(--border-subtle);
+      text-decoration: none;
+      transition: color 0.2s, border-color 0.2s, transform 0.2s;
+    }
+
+    .btn-secondary:hover {
+      color: var(--teal);
+      border-color: var(--border);
+      transform: translateY(-1px);
+    }
+
+    /* DIVIDER */
+    .divider {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      border-top: 0.5px solid var(--border-subtle);
+    }
+
+    /* MISSION */
+    .mission {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 1.5rem;
+    }
+
+    .mission-statement {
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: clamp(1.4rem, 3.5vw, 2rem);
+      line-height: 1.4;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      margin-bottom: 2rem;
+    }
+
+    .mission-body {
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--text-secondary);
+      line-height: 1.85;
+      max-width: 600px;
+    }
+
+    .mission-body p + p { margin-top: 1.25rem; }
+
+    .mission-body strong {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    /* PILLARS */
+    .pillars {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 1rem 2rem 5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .pillar {
+      background: var(--teal-dim2);
+      border: 0.5px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .pillar:hover {
+      border-color: rgba(0, 201, 177, 0.3);
+      background: var(--teal-dim);
+    }
+
+    .pillar-icon {
+      width: 36px; height: 36px;
+      background: var(--teal-dim);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+
+    .pillar h3 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.01em;
+    }
+
+    .pillar p {
+      font-size: 0.875rem;
+      font-weight: 300;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* FEATURES */
+    .features {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 1rem 2rem 5rem;
+    }
+
+    .features-header { margin-bottom: 2.5rem; }
+
+    .features-header h2 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      margin-top: 0.5rem;
+    }
+
+    .feature-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.25rem;
+      padding: 1.5rem 0;
+      border-bottom: 0.5px solid var(--border-subtle);
+    }
+
+    .feature-item:last-child { border-bottom: none; }
+
+    .feature-num {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 0.75rem;
+      color: var(--teal);
+      min-width: 28px;
+      padding-top: 3px;
+      letter-spacing: 0.05em;
+    }
+
+    .feature-content h3 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--text-primary);
+      margin-bottom: 0.35rem;
+      letter-spacing: -0.01em;
+    }
+
+    .feature-content p {
+      font-size: 0.9rem;
+      font-weight: 300;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* OPEN SOURCE */
+    .opensource {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 1rem 2rem 5rem;
+    }
+
+    .opensource-card {
+      background: var(--teal-dim2);
+      border: 0.5px solid var(--border);
+      border-radius: 20px;
+      padding: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .opensource-card h2 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .opensource-card p {
+      font-size: 0.9rem;
+      font-weight: 300;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      max-width: 380px;
+    }
+
+    .github-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: rgba(240,244,255,0.06);
+      border: 0.5px solid var(--border-subtle);
+      border-radius: 100px;
+      padding: 0.7rem 1.4rem;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      font-weight: 400;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .github-btn:hover {
+      color: var(--teal);
+      border-color: var(--border);
+    }
+
+    .github-btn svg {
+      width: 18px; height: 18px;
+      fill: currentColor;
+      flex-shrink: 0;
+    }
+
+    /* FOOTER */
+    footer {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 2rem;
+      border-top: 0.5px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-left {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .footer-right {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .footer-right a {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-right a:hover { color: var(--teal); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .animate-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 1rem 1.25rem; }
+      .hero, .mission, .pillars, .features, .opensource { padding-left: 1.25rem; padding-right: 1.25rem; }
+      .opensource-card { padding: 1.75rem; }
+      .hero { padding-top: 4rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <header>
+    <a href="/" class="header-logo">
+      <img src="images/pledgerlogo.png" alt="pLedger logo" />
+      <span class="header-logo-text"><span>p</span>Ledger</span>
+    </a>
+    <nav>
+      <a href="privacy-policy/">Privacy Policy</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      Coming to iOS, June 2026
+    </div>
+    <h1>Your <span class="teal">Private</span><br />Ledger.</h1>
+    <p class="hero-sub">
+      Scan receipts, track budgets, and take control of your spending, all on your device. No servers. No surveillance. Just you and your finances.
+    </p>
+    <div class="hero-cta">
+      <a href="#" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18.5A6.5 6.5 0 1 0 12 5.5a6.5 6.5 0 0 0 0 13zM12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        Coming Soon on App Store
+      </a>
+      <a href="https://github.com/chukaufo/pLedger" class="btn-secondary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+        View on GitHub
+      </a>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="mission animate-in">
+    <p class="section-label">Our Mission</p>
+    <p class="mission-statement">
+      Privacy isn't a feature.<br />It's the foundation.
+    </p>
+    <div class="mission-body">
+      <p>
+        pLedger was built on a single principle: <strong>your financial data belongs to you.</strong> Not to advertisers. Not to analytics platforms. Not even to us. The developer of pLedger cannot see your spending, because there is no server to send it to.
+      </p>
+      <p>
+        Everything lives on your device. If you choose to sync across your Apple devices, it travels encrypted through your personal iCloud, a private tunnel only you can open.
+      </p>
+      <p>
+        But pLedger is more than privacy. It's a <strong>pledge to yourself</strong>, a commitment to understand your habits, honour your budgets, and build a healthier relationship with money. Every receipt you scan and every budget you set is a small act of financial self-awareness.
+      </p>
+    </div>
+  </section>
+
+  <div class="pillars animate-in">
+    <div class="pillar">
+      <div class="pillar-icon">🔒</div>
+      <h3>Zero data collection</h3>
+      <p>No accounts. No tracking. No analytics. Your receipts never leave your device.</p>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">📱</div>
+      <h3>On-device intelligence</h3>
+      <p>Receipt scanning, store learning, and categorization all happen locally using Apple Vision.</p>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">☁️</div>
+      <h3>Your iCloud, your sync</h3>
+      <p>Optional iCloud sync travels through your personal encrypted Apple account, never our servers.</p>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">📊</div>
+      <h3>A pledge to yourself</h3>
+      <p>Set budgets, build streaks, and track your progress toward genuine financial clarity.</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <section class="features animate-in">
+    <div class="features-header">
+      <p class="section-label">What's inside</p>
+      <h2>Everything you need.<br />Nothing you don't.</h2>
+    </div>
+    <div class="feature-list">
+      <div class="feature-item">
+        <span class="feature-num">01</span>
+        <div class="feature-content">
+          <h3>Receipt scanning</h3>
+          <p>Point your camera at any receipt. pLedger extracts the store name, total, and date instantly using on-device OCR with no upload required.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <span class="feature-num">02</span>
+        <div class="feature-content">
+          <h3>Smart budget tracking</h3>
+          <p>Set daily, weekly, and monthly budgets per category. Get proactive alerts at 50%, 75%, 90%, and 100% so you're never caught off guard.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <span class="feature-num">03</span>
+        <div class="feature-content">
+          <h3>Recurring bills</h3>
+          <p>Log your subscriptions and bills once. pLedger auto-records them on their due date and reminds you two days before.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <span class="feature-num">04</span>
+        <div class="feature-content">
+          <h3>Spending insights</h3>
+          <p>Visual charts across daily, weekly, and yearly views reveal your real spending patterns, not averages but your actual data.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <span class="feature-num">05</span>
+        <div class="feature-content">
+          <h3>pLedger Wrapped</h3>
+          <p>Every December 31st, get a full year in review: top categories, biggest purchases, best streaks, and your quietest month.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <span class="feature-num">06</span>
+        <div class="feature-content">
+          <h3>Multi-currency support</h3>
+          <p>Travel or live across regions. Each receipt and budget snapshots its currency at save time, keeping historical data accurate forever.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="opensource animate-in">
+    <div class="opensource-card">
+      <div>
+        <h2>Open source by default</h2>
+        <p>pLedger's source code is publicly available. Read it, audit it, and verify our privacy claims yourself. Trust shouldn't require faith. It should be earned through transparency.</p>
+      </div>
+      <a href="https://github.com/chukaufo/pLedger" class="github-btn">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+        View on GitHub
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <span class="footer-left">© 2026 pLedger. Built by Chuka Uwefoh.</span>
+    <div class="footer-right">
+      <a href="privacy-policy/">Privacy Policy</a>
+      <a href="https://github.com/chukaufo/pLedger">GitHub</a>
+    </div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.animate-in').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
