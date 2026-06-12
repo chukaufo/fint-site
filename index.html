@@ -213,6 +213,157 @@
       transform: translateY(-1px);
     }
 
+    /* ─── PROMO SECTION ─── */
+    .promo {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 2rem 5rem;
+    }
+
+    .promo img {
+      width: 100%;
+      border-radius: 24px;
+      display: block;
+      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.5), 0 0 0 0.5px var(--border);
+    }
+
+    /* ─── IPHONE SCREENSHOTS ─── */
+    .screenshots-iphone {
+      position: relative;
+      z-index: 1;
+      padding: 0 0 5rem;
+    }
+
+    .screenshots-iphone .section-header {
+      max-width: 760px;
+      margin: 0 auto 2.5rem;
+      padding: 0 2rem;
+    }
+
+    .iphone-scroll-track {
+      display: flex;
+      gap: 1.25rem;
+      overflow-x: auto;
+      padding: 0.5rem 2rem 1.5rem;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .iphone-scroll-track::-webkit-scrollbar { display: none; }
+
+    /* indent first card so it aligns with the section header on wide screens */
+    @media (min-width: 900px) {
+      .iphone-scroll-track {
+        padding-left: calc(50vw - 430px);
+        padding-right: calc(50vw - 430px);
+      }
+    }
+
+    .iphone-card {
+      flex: 0 0 auto;
+      width: 260px;
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .iphone-card img {
+      width: 100%;
+      border-radius: 20px;
+      display: block;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 0.5px var(--border);
+      transition: transform 0.3s ease;
+    }
+
+    .iphone-card img:hover { transform: translateY(-4px); }
+
+    .iphone-card-caption {
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      letter-spacing: -0.01em;
+      padding: 0 0.25rem;
+    }
+
+    /* ─── IPAD SCREENSHOTS ─── */
+    .screenshots-ipad {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 2rem 5rem;
+    }
+
+    .screenshots-ipad .section-header {
+      margin-bottom: 2.5rem;
+    }
+
+    .ipad-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    .ipad-card {
+      display: flex;
+      flex-direction: column;
+      gap: 0.875rem;
+    }
+
+    .ipad-card img {
+      width: 100%;
+      border-radius: 16px;
+      display: block;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45), 0 0 0 0.5px var(--border);
+      transition: transform 0.3s ease;
+    }
+
+    .ipad-card img:hover { transform: translateY(-3px); }
+
+    .ipad-card-caption {
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      letter-spacing: -0.01em;
+    }
+
+    @media (max-width: 600px) {
+      .ipad-grid { grid-template-columns: 1fr; }
+    }
+
+    /* SECTION HEADER shared styles */
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 0.5rem;
+    }
+
+    .section-header h2 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: clamp(1.4rem, 3vw, 1.9rem);
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    .section-header p.sub {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 300;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
     /* DIVIDER */
     .divider {
       position: relative;
@@ -232,14 +383,7 @@
       padding: 5rem 2rem;
     }
 
-    .section-label {
-      font-size: 0.75rem;
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--teal);
-      margin-bottom: 1.5rem;
-    }
+    .mission .section-label { margin-bottom: 1.5rem; }
 
     .mission-statement {
       font-family: 'Syne', sans-serif;
@@ -499,8 +643,11 @@
     @media (max-width: 600px) {
       header { padding: 1rem 1.25rem; }
       .hero, .mission, .pillars, .features, .opensource { padding-left: 1.25rem; padding-right: 1.25rem; }
+      .promo, .screenshots-ipad { padding-left: 1.25rem; padding-right: 1.25rem; }
       .opensource-card { padding: 1.75rem; }
       .hero { padding-top: 4rem; }
+      .iphone-scroll-track { padding-left: 1.25rem; padding-right: 1.25rem; }
+      .iphone-card { width: 220px; }
     }
   </style>
 </head>
@@ -516,6 +663,7 @@
     </a>
   </header>
 
+  <!-- HERO -->
   <section class="hero">
     <div class="hero-badge">
       <span class="hero-badge-dot"></span>
@@ -537,8 +685,88 @@
     </div>
   </section>
 
+  <!-- PROMO -->
+  <section class="promo animate-in">
+    <img
+      src="images/fint%20promo.png"
+      alt="Fint — Your private finance tracker"
+      loading="lazy"
+    />
+  </section>
+
+  <!-- IPHONE SCREENSHOTS -->
+  <section class="screenshots-iphone animate-in">
+    <div class="section-header screenshots-iphone">
+      <p class="section-label">iPhone</p>
+      <h2>See it in action.</h2>
+      <p class="sub">Scroll to explore every corner of the app.</p>
+    </div>
+    <div class="iphone-scroll-track">
+
+      <div class="iphone-card">
+        <img src="images/iPhone/receiptposter.png" alt="Scan a receipt" loading="lazy" />
+        <span class="iphone-card-caption">Scan a receipt. Fint handles the rest.</span>
+      </div>
+
+      <div class="iphone-card">
+        <img src="images/iPhone/nooverspend.png" alt="Real-time budget alerts" loading="lazy" />
+        <span class="iphone-card-caption">Know before you overspend.</span>
+      </div>
+
+      <div class="iphone-card">
+        <img src="images/iPhone/spendsmarter.png" alt="Category budgets" loading="lazy" />
+        <span class="iphone-card-caption">Spend smarter, category by category.</span>
+      </div>
+
+      <div class="iphone-card">
+        <img src="images/iPhone/spendingvisualized.png" alt="Spending insights" loading="lazy" />
+        <span class="iphone-card-caption">Your spending, visualized.</span>
+      </div>
+
+      <div class="iphone-card">
+        <img src="images/iPhone/icloud.png" alt="iCloud sync settings" loading="lazy" />
+        <span class="iphone-card-caption">Sync to iCloud. Stay in control.</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- IPAD SCREENSHOTS -->
+  <section class="screenshots-ipad animate-in">
+    <div class="section-header">
+      <p class="section-label">iPad</p>
+      <h2>Also on iPad.</h2>
+      <p class="sub">The full Fint experience, built for a bigger screen.</p>
+    </div>
+    <div class="ipad-grid">
+
+      <div class="ipad-card">
+        <img src="images/iPad/scan%20a%20receipt%20ipad.png" alt="Receipt scanning on iPad" loading="lazy" />
+        <span class="ipad-card-caption">Scan a receipt. Fint handles the rest.</span>
+      </div>
+
+      <div class="ipad-card">
+        <img src="images/iPad/realtimealerts%20ipad.png" alt="Real-time alerts on iPad" loading="lazy" />
+        <span class="ipad-card-caption">Real-time alerts on spending and budget tracking.</span>
+      </div>
+
+      <div class="ipad-card">
+        <img src="images/iPad/spending%20visualized%20ipad.png" alt="Spending insights on iPad" loading="lazy" />
+        <span class="ipad-card-caption">Your spending, visualized.</span>
+      </div>
+
+      <div class="ipad-card">
+        <img src="images/iPad/ipadicloud.png" alt="iCloud sync on iPad" loading="lazy" />
+        <span class="ipad-card-caption">Sync to iCloud. Stay in control.</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- DIVIDER before Mission -->
   <div class="divider"></div>
 
+  <!-- MISSION -->
   <section class="mission animate-in">
     <p class="section-label">Our Mission</p>
     <p class="mission-statement">
@@ -557,6 +785,7 @@
     </div>
   </section>
 
+  <!-- PILLARS -->
   <div class="pillars animate-in">
     <div class="pillar">
       <div class="pillar-icon">🔒</div>
@@ -582,6 +811,7 @@
 
   <div class="divider"></div>
 
+  <!-- FEATURES -->
   <section class="features animate-in">
     <div class="features-header">
       <p class="section-label">What's inside</p>
@@ -633,6 +863,7 @@
     </div>
   </section>
 
+  <!-- OPEN SOURCE -->
   <section class="opensource animate-in">
     <div class="opensource-card">
       <div>
