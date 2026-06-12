@@ -229,7 +229,7 @@
       box-shadow: 0 32px 80px rgba(0, 0, 0, 0.5), 0 0 0 0.5px var(--border);
     }
 
-    /* ─── IPHONE SCREENSHOTS ─── */
+    /* ─── IPHONE SCREENSHOTS — TABBED CAROUSEL ─── */
     .screenshots-iphone {
       position: relative;
       z-index: 1;
@@ -242,55 +242,147 @@
       padding: 0 2rem;
     }
 
-    .iphone-scroll-track {
+    /* Tab nav */
+    .iphone-tabs {
       display: flex;
-      gap: 1.25rem;
-      overflow-x: auto;
-      padding: 0.5rem 2rem 1.5rem;
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      padding: 0 2rem;
+      margin-bottom: 2.5rem;
     }
 
-    .iphone-scroll-track::-webkit-scrollbar { display: none; }
-
-    /* indent first card so it aligns with the section header on wide screens */
-    @media (min-width: 900px) {
-      .iphone-scroll-track {
-        padding-left: calc(50vw - 430px);
-        padding-right: calc(50vw - 430px);
-      }
+    .iphone-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 1rem;
+      border-radius: 100px;
+      border: 0.5px solid var(--border-subtle);
+      background: transparent;
+      color: var(--text-muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 400;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
     }
 
-    .iphone-card {
-      flex: 0 0 auto;
-      width: 260px;
-      scroll-snap-align: start;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .iphone-card img {
-      width: 100%;
-      border-radius: 20px;
-      display: block;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 0.5px var(--border);
-      transition: transform 0.3s ease;
-    }
-
-    .iphone-card img:hover { transform: translateY(-4px); }
-
-    .iphone-card-caption {
-      font-family: 'Syne', sans-serif;
-      font-weight: 600;
-      font-size: 0.875rem;
+    .iphone-tab:hover {
       color: var(--text-secondary);
-      letter-spacing: -0.01em;
-      padding: 0 0.25rem;
+      border-color: var(--border);
     }
 
-    /* ─── IPAD SCREENSHOTS ─── */
+    .iphone-tab.active {
+      background: var(--teal-dim);
+      border-color: var(--border);
+      color: var(--teal);
+      font-weight: 500;
+    }
+
+    /* Stage */
+    .iphone-stage {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      height: 560px;
+      overflow: hidden;
+    }
+
+    .iphone-slide {
+      position: absolute;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                  opacity 0.5s ease,
+                  filter 0.5s ease;
+      cursor: pointer;
+      will-change: transform, opacity;
+    }
+
+    .iphone-slide img {
+      width: 220px;
+      border-radius: 22px;
+      display: block;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6), 0 0 0 0.5px var(--border);
+    }
+
+    /* Active: centre, full size */
+    .iphone-slide.pos-active {
+      transform: translateX(0) scale(1);
+      opacity: 1;
+      filter: none;
+      z-index: 5;
+    }
+
+    /* Adjacent: slightly behind, peeking in */
+    .iphone-slide.pos-prev {
+      transform: translateX(-240px) scale(0.88);
+      opacity: 0.55;
+      filter: brightness(0.7);
+      z-index: 4;
+    }
+
+    .iphone-slide.pos-next {
+      transform: translateX(240px) scale(0.88);
+      opacity: 0.55;
+      filter: brightness(0.7);
+      z-index: 4;
+    }
+
+    /* Far sides: peeking, more faded */
+    .iphone-slide.pos-far-prev {
+      transform: translateX(-420px) scale(0.78);
+      opacity: 0.25;
+      filter: brightness(0.5);
+      z-index: 3;
+    }
+
+    .iphone-slide.pos-far-next {
+      transform: translateX(420px) scale(0.78);
+      opacity: 0.25;
+      filter: brightness(0.5);
+      z-index: 3;
+    }
+
+    .iphone-slide.pos-hidden {
+      transform: translateX(0) scale(0.7);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Dot indicators */
+    .iphone-dots {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 2rem;
+    }
+
+    .iphone-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      transition: background 0.2s, transform 0.2s;
+      cursor: pointer;
+    }
+
+    .iphone-dot.active {
+      background: var(--teal);
+      transform: scale(1.4);
+    }
+
+    @media (max-width: 600px) {
+      .iphone-stage { height: 440px; }
+      .iphone-slide img { width: 170px; }
+      .iphone-slide.pos-prev  { transform: translateX(-185px) scale(0.86); }
+      .iphone-slide.pos-next  { transform: translateX(185px) scale(0.86); }
+      .iphone-slide.pos-far-prev { transform: translateX(-340px) scale(0.76); }
+      .iphone-slide.pos-far-next { transform: translateX(340px) scale(0.76); }
+    }
+
+    /* ─── IPAD SCREENSHOTS — LIGHTBOX GRID ─── */
     .screenshots-ipad {
       position: relative;
       z-index: 1;
@@ -310,31 +402,157 @@
     }
 
     .ipad-card {
-      display: flex;
-      flex-direction: column;
-      gap: 0.875rem;
+      position: relative;
+      cursor: pointer;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 0.5px solid var(--border);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .ipad-card:hover {
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.6), 0 0 0 1px var(--border);
     }
 
     .ipad-card img {
       width: 100%;
-      border-radius: 16px;
       display: block;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45), 0 0 0 0.5px var(--border);
-      transition: transform 0.3s ease;
     }
 
-    .ipad-card img:hover { transform: translateY(-3px); }
-
-    .ipad-card-caption {
-      font-family: 'Syne', sans-serif;
-      font-weight: 600;
-      font-size: 0.8rem;
-      color: var(--text-secondary);
-      letter-spacing: -0.01em;
+    .ipad-card-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(13, 27, 62, 0.0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s ease;
     }
+
+    .ipad-card:hover .ipad-card-overlay {
+      background: rgba(13, 27, 62, 0.35);
+    }
+
+    .ipad-expand-icon {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: rgba(0, 201, 177, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: scale(0.7);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .ipad-card:hover .ipad-expand-icon {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .ipad-expand-icon svg {
+      width: 18px; height: 18px;
+      stroke: var(--navy);
+      fill: none;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+    }
+
+    /* Lightbox */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .lightbox.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .lightbox-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(8, 16, 38, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .lightbox-img {
+      position: relative;
+      z-index: 2;
+      max-width: min(90vw, 900px);
+      max-height: 90vh;
+      border-radius: 16px;
+      box-shadow: 0 40px 120px rgba(0, 0, 0, 0.8);
+      transform: scale(0.92);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      object-fit: contain;
+    }
+
+    .lightbox.open .lightbox-img {
+      transform: scale(1);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      z-index: 3;
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: rgba(240, 244, 255, 0.1);
+      border: 0.5px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .lightbox-close:hover { background: rgba(240, 244, 255, 0.2); }
+
+    .lightbox-close svg {
+      width: 16px; height: 16px;
+      stroke: var(--text-primary);
+      fill: none;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+    }
+
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 3;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: rgba(240, 244, 255, 0.08);
+      border: 0.5px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .lightbox-nav:hover { background: rgba(240, 244, 255, 0.16); }
+    .lightbox-nav svg { width: 16px; height: 16px; stroke: var(--text-primary); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    .lightbox-prev { left: 1.5rem; }
+    .lightbox-next { right: 1.5rem; }
 
     @media (max-width: 600px) {
       .ipad-grid { grid-template-columns: 1fr; }
+      .lightbox-nav { display: none; }
     }
 
     /* SECTION HEADER shared styles */
@@ -694,74 +912,110 @@
     />
   </section>
 
-  <!-- IPHONE SCREENSHOTS -->
+  <!-- IPHONE SCREENSHOTS — TABBED CAROUSEL -->
   <section class="screenshots-iphone animate-in">
-    <div class="section-header screenshots-iphone">
+    <div class="section-header">
       <p class="section-label">iPhone</p>
       <h2>See it in action.</h2>
-      <p class="sub">Scroll to explore every corner of the app.</p>
     </div>
-    <div class="iphone-scroll-track">
 
-      <div class="iphone-card">
+    <div class="iphone-tabs">
+      <button class="iphone-tab active" data-index="0">📷 Receipt</button>
+      <button class="iphone-tab" data-index="1">🔔 Alerts</button>
+      <button class="iphone-tab" data-index="2">💰 Budgets</button>
+      <button class="iphone-tab" data-index="3">📊 Insights</button>
+      <button class="iphone-tab" data-index="4">☁️ iCloud</button>
+    </div>
+
+    <div class="iphone-stage" id="iphoneStage">
+      <div class="iphone-slide" data-index="0">
         <img src="images/iPhone/receiptposter.png" alt="Scan a receipt" loading="lazy" />
-        <span class="iphone-card-caption">Scan a receipt. Fint handles the rest.</span>
       </div>
-
-      <div class="iphone-card">
+      <div class="iphone-slide" data-index="1">
         <img src="images/iPhone/nooverspend.png" alt="Real-time budget alerts" loading="lazy" />
-        <span class="iphone-card-caption">Know before you overspend.</span>
       </div>
-
-      <div class="iphone-card">
+      <div class="iphone-slide" data-index="2">
         <img src="images/iPhone/spendsmarter.png" alt="Category budgets" loading="lazy" />
-        <span class="iphone-card-caption">Spend smarter, category by category.</span>
       </div>
-
-      <div class="iphone-card">
+      <div class="iphone-slide" data-index="3">
         <img src="images/iPhone/spendingvisualized.png" alt="Spending insights" loading="lazy" />
-        <span class="iphone-card-caption">Your spending, visualized.</span>
       </div>
-
-      <div class="iphone-card">
-        <img src="images/iPhone/icloud.png" alt="iCloud sync settings" loading="lazy" />
-        <span class="iphone-card-caption">Sync to iCloud. Stay in control.</span>
+      <div class="iphone-slide" data-index="4">
+        <img src="images/iPhone/icloud.png" alt="iCloud sync" loading="lazy" />
       </div>
+    </div>
 
+    <div class="iphone-dots" id="iphoneDots">
+      <span class="iphone-dot active" data-index="0"></span>
+      <span class="iphone-dot" data-index="1"></span>
+      <span class="iphone-dot" data-index="2"></span>
+      <span class="iphone-dot" data-index="3"></span>
+      <span class="iphone-dot" data-index="4"></span>
     </div>
   </section>
 
-  <!-- IPAD SCREENSHOTS -->
+  <!-- IPAD SCREENSHOTS — LIGHTBOX GRID -->
   <section class="screenshots-ipad animate-in">
     <div class="section-header">
       <p class="section-label">iPad</p>
       <h2>Also on iPad.</h2>
-      <p class="sub">The full Fint experience, built for a bigger screen.</p>
+      <p class="sub">The full Fint experience, built for a bigger screen. Tap any screenshot to expand.</p>
     </div>
     <div class="ipad-grid">
 
-      <div class="ipad-card">
+      <div class="ipad-card" data-lb="0">
         <img src="images/iPad/scan%20a%20receipt%20ipad.png" alt="Receipt scanning on iPad" loading="lazy" />
-        <span class="ipad-card-caption">Scan a receipt. Fint handles the rest.</span>
+        <div class="ipad-card-overlay">
+          <div class="ipad-expand-icon">
+            <svg viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          </div>
+        </div>
       </div>
 
-      <div class="ipad-card">
+      <div class="ipad-card" data-lb="1">
         <img src="images/iPad/realtimealerts%20ipad.png" alt="Real-time alerts on iPad" loading="lazy" />
-        <span class="ipad-card-caption">Real-time alerts on spending and budget tracking.</span>
+        <div class="ipad-card-overlay">
+          <div class="ipad-expand-icon">
+            <svg viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          </div>
+        </div>
       </div>
 
-      <div class="ipad-card">
+      <div class="ipad-card" data-lb="2">
         <img src="images/iPad/spending%20visualized%20ipad.png" alt="Spending insights on iPad" loading="lazy" />
-        <span class="ipad-card-caption">Your spending, visualized.</span>
+        <div class="ipad-card-overlay">
+          <div class="ipad-expand-icon">
+            <svg viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          </div>
+        </div>
       </div>
 
-      <div class="ipad-card">
+      <div class="ipad-card" data-lb="3">
         <img src="images/iPad/ipadicloud.png" alt="iCloud sync on iPad" loading="lazy" />
-        <span class="ipad-card-caption">Sync to iCloud. Stay in control.</span>
+        <div class="ipad-card-overlay">
+          <div class="ipad-expand-icon">
+            <svg viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          </div>
+        </div>
       </div>
 
     </div>
   </section>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox">
+    <div class="lightbox-backdrop" id="lbBackdrop"></div>
+    <button class="lightbox-close" id="lbClose">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <button class="lightbox-nav lightbox-prev" id="lbPrev">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <img class="lightbox-img" id="lbImg" src="" alt="" />
+    <button class="lightbox-nav lightbox-next" id="lbNext">
+      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </div>
 
   <!-- DIVIDER before Mission -->
   <div class="divider"></div>
