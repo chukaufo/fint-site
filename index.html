@@ -238,8 +238,9 @@
 
     .screenshots-iphone .section-header {
       max-width: 760px;
-      margin: 0 auto 2.5rem;
+      margin: 0 auto 2rem;
       padding: 0 2rem;
+      text-align: center;
     }
 
     /* Tab nav */
@@ -288,7 +289,7 @@
       justify-content: center;
       align-items: flex-end;
       height: 560px;
-      overflow: hidden;
+      overflow: visible;
     }
 
     .iphone-slide {
@@ -858,6 +859,13 @@
       transform: translateY(0);
     }
 
+    /* carousel section must never be opacity:0 since JS needs to measure it */
+    .screenshots-iphone.animate-in,
+    .screenshots-ipad.animate-in {
+      opacity: 1;
+      transform: none;
+    }
+
     @media (max-width: 600px) {
       header { padding: 1rem 1.25rem; }
       .hero, .mission, .pillars, .features, .opensource { padding-left: 1.25rem; padding-right: 1.25rem; }
@@ -1140,16 +1148,172 @@
   </footer>
 
   <script>
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          observer.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.1 });
+    document.addEventListener('DOMContentLoaded', function () {
 
-    document.querySelectorAll('.animate-in').forEach(el => observer.observe(el));
+      // ── Scroll-reveal ──────────────────────────────────────────
+      const revealObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting) {
+            e.target.classList.add('visible');
+            revealObserver.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.08 });
+
+      document.querySelectorAll('.animate-in').forEach(function(el) {
+        revealObserver.observe(el);
+      });
+
+      // ── iPhone Carousel ────────────────────────────────────────
+      var TOTAL   = 5;
+      var current = 0;
+      var autoTimer;
+
+      var slides = Array.from(document.querySelectorAll('.iphone-slide'));
+      var tabs   = Array.from(document.querySelectorAll('.iphone-tab'));
+      var dots   = Array.from(document.querySelectorAll('.iphone-dot'));
+      var stage  = document.getElementById('iphoneStage');
+
+      function getPos(slideIdx, activeIdx) {
+        var diff = slideIdx - activeIdx;
+        // normalise to -2..2 range with wrap
+        if (diff >  2) diff -= TOTAL;
+        if (diff < -2) diff += TOTAL;
+        if (diff === 0)  return 'pos-active';
+        if (diff === -1) return 'pos-prev';
+        if (diff === 1)  return 'pos-next';
+        if (diff === -2) return 'pos-far-prev';
+        if (diff === 2)  return 'pos-far-next';
+        return 'pos-hidden';
+      }
+
+      function goTo(idx) {
+        current = ((idx % TOTAL) + TOTAL) % TOTAL;
+        slides.forEach(function(s, i) {
+          s.className = 'iphone-slide ' + getPos(i, current);
+        });
+        tabs.forEach(function(t, i) {
+          t.classList.toggle('active', i === current);
+        });
+        dots.forEach(function(d, i) {
+          d.classList.toggle('active', i === current);
+        });
+      }
+
+      // Tab clicks
+      tabs.forEach(function(t) {
+        t.addEventListener('click', function() {
+          goTo(parseInt(t.getAttribute('data-index')));
+        });
+      });
+
+      // Dot clicks
+      dots.forEach(function(d) {
+        d.addEventListener('click', function() {
+          goTo(parseInt(d.getAttribute('data-index')));
+        });
+      });
+
+      // Click side slides to advance
+      slides.forEach(function(s) {
+        s.addEventListener('click', function() {
+          if (s.classList.contains('pos-next') || s.classList.contains('pos-far-next')) {
+            goTo(current + 1);
+          } else if (s.classList.contains('pos-prev') || s.classList.contains('pos-far-prev')) {
+            goTo(current - 1);
+          }
+        });
+      });
+
+      // Keyboard nav (only when lightbox closed)
+      document.addEventListener('keydown', function(e) {
+        if (document.getElementById('lightbox').classList.contains('open')) return;
+        if (e.key === 'ArrowLeft')  goTo(current - 1);
+        if (e.key === 'ArrowRight') goTo(current + 1);
+      });
+
+      // Touch swipe
+      var touchStartX = 0;
+      stage.addEventListener('touchstart', function(e) {
+        touchStartX = e.touches[0].clientX;
+      }, { passive: true });
+      stage.addEventListener('touchend', function(e) {
+        var dx = e.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(dx) > 40) goTo(dx < 0 ? current + 1 : current - 1);
+      }, { passive: true });
+
+      // Auto-advance
+      function startAuto() {
+        clearInterval(autoTimer);
+        autoTimer = setInterval(function() { goTo(current + 1); }, 3500);
+      }
+      stage.addEventListener('mouseenter', function() { clearInterval(autoTimer); });
+      stage.addEventListener('mouseleave', startAuto);
+
+      // Init
+      goTo(0);
+      startAuto();
+
+      // ── iPad Lightbox ──────────────────────────────────────────
+      var ipadImages = [
+        'images/iPad/scan%20a%20receipt%20ipad.png',
+        'images/iPad/realtimealerts%20ipad.png',
+        'images/iPad/spending%20visualized%20ipad.png',
+        'images/iPad/ipadicloud.png'
+      ];
+      var ipadAlts = [
+        'Receipt scanning on iPad',
+        'Real-time alerts on iPad',
+        'Spending insights on iPad',
+        'iCloud sync on iPad'
+      ];
+
+      var lightbox   = document.getElementById('lightbox');
+      var lbImg      = document.getElementById('lbImg');
+      var lbClose    = document.getElementById('lbClose');
+      var lbBackdrop = document.getElementById('lbBackdrop');
+      var lbPrev     = document.getElementById('lbPrev');
+      var lbNext     = document.getElementById('lbNext');
+      var lbIndex    = 0;
+
+      function openLightbox(idx) {
+        lbIndex = idx;
+        lbImg.src = ipadImages[idx];
+        lbImg.alt = ipadAlts[idx];
+        lightbox.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+
+      function lbStep(dir) {
+        lbIndex = ((lbIndex + dir) + ipadImages.length) % ipadImages.length;
+        lbImg.src = ipadImages[lbIndex];
+        lbImg.alt = ipadAlts[lbIndex];
+      }
+
+      document.querySelectorAll('.ipad-card').forEach(function(card) {
+        card.addEventListener('click', function() {
+          openLightbox(parseInt(card.getAttribute('data-lb')));
+        });
+      });
+
+      lbClose.addEventListener('click', closeLightbox);
+      lbBackdrop.addEventListener('click', closeLightbox);
+      lbPrev.addEventListener('click', function() { lbStep(-1); });
+      lbNext.addEventListener('click', function() { lbStep(1); });
+
+      document.addEventListener('keydown', function(e) {
+        if (!lightbox.classList.contains('open')) return;
+        if (e.key === 'Escape')     closeLightbox();
+        if (e.key === 'ArrowLeft')  lbStep(-1);
+        if (e.key === 'ArrowRight') lbStep(1);
+      });
+
+    }); // end DOMContentLoaded
   </script>
 </body>
 </html>
